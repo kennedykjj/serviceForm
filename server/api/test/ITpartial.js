@@ -18,22 +18,6 @@ describe('POST/partial', function(){
     "name": "nome",
     "sessionId": "sessionId1"
   };
-  let dataalmostfull = {
-    "productId": "3",
-    "name": "nome",
-    "email": "kennedyfernando.kj@gmail.com",
-    "cpf": "39342761801",
-    "sessionId": "sessionId1"
-  };
-  let datafull = {
-    "productId": "3",
-    "name": "nome",
-    "email": "kennedyfernando.kj@gmail.com",
-    "cpf": "39342761801",
-    "birthdate": 1552177440,
-    "phone": "phone",
-    "sessionId": "sessionId1"
-  };
   it('responde with 200 and return the json with',function(done){
     request(app)
     .post('/api/forms/partial')

@@ -18,26 +18,32 @@ exports.postPartial = function(req, res, next) {
       logger.log(createdform)
       res.json(createdform);
     }, function(err) {
-      next(err);
+      res.status(500).send('Finishing /partial process with sessionId: '+ req.body.sessionId + ' with error');
     });
 };
 
 exports.postFinal = function(req, res, next) {
   logger.log('Initializing /final process with sessionId: '+ req.body.sessionId);
-  //TODO: delete from FormPartialModel all the guys with the req.body.sessionId
   //Valid if there isn't a doc with the same CPF with less than 90 days from date.now, if not
   //If not continue
   FormFinalModel.findOne({cpf: req.body.cpf}, function(err,doc) {
     if(!err){
-      if(doc != null)
-        business.validate90days(doc.body.insertiondate, Date.now());
+      if(doc != null){
+        var bol = business.validate90days(doc.body.insertiondate, Date.now());
+        if(!bol){
+          res.status(500).send("There's a insertion with this CPF with less than 90 days from now ("+Date.now()+")");
+        }
+      }
     }
     else{
       next(err);
     }
   });
   //Valid if the guy isn't younger than 18 and not older than 80
-  business.validateAge(req.body.birthdate);
+  var bol = business.validateAge(req.body.birthdate);
+  if(!bol){
+    res.status(500).send("User is younger than 18 or older than 80");
+  }
   //delete from partialmodel collection the doc with the sessionId
   FormPartialModel.deleteOne({sessionId: req.body.sessionId})
   .then(function(deletedform){
@@ -49,6 +55,6 @@ exports.postFinal = function(req, res, next) {
       logger.log(createdform);
       res.json(createdform);
     }, function(err) {
-      next(err);
+      res.status(500).send('Finishing /final process with sessionId: '+ req.body.sessionId + ' with error');
     });
 };

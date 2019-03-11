@@ -8,7 +8,7 @@ describe('POST/final', function(){
     "name": "nome",
     "email": "kennedyfernando.kj@gmail.com",
     "cpf": "39342761801",
-    "birthdate": 1552177440,
+    "birthdate": "1992-01-09T01:05:24.610Z",
     "phone": "phone",
     "sessionId": "sessionId1"
   };
